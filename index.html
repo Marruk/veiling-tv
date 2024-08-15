@@ -1,8 +1,33 @@
-<html>
-    <head>
-        <title>Hi</title>
-    </head>
-</html>
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>Veiling TV</title>
+    <meta name="description" content="Veiling TV">
+    <meta name="author" content="Pim Kerkhoven">
+
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/styles.css">
+
+</head>
+
 <body>
-    Hi
+    <div id="overlay"></div>
+    <div id="content">
+        <button id="next" onclick="playJingle()">Easter Egg (WOW FACTOR 10)</button>
+        <audio id="jingle" src="StarterA.mp3" preload="auto" style="display: none;">
+        </audio>
+        <h1>Veiling TV</h1>
+        <h2 id="rider">-</h2>
+        <button id="next" onclick="nextRider()">Volgende Renner</button>
+        <!-- <button id="next" onclick="nextRider()">Volgende Land</button> -->
+        <p id="count">-</p>
+    </div>
+
+    <script src="js/main.js"></script>
 </body>
+
+</html>
