@@ -2,9 +2,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap');
 
 body {
-    background-image: url("../data/tour-image.webp");
-    /*     background-image: url("../data/giro-image.jpg"); */
-    /* background-image: url("../data/vuelta-image.jpg"); */
+    /* background-image: url("../data/tour-image.webp"); */
+    /* background-image: url("../data/giro-image.jpg"); */
+    background-image: url("../data/vuelta-image.jpg");
     /* background-image: url("../data/ek-2016-frankrijk-poules.jpg"); */
     background-repeat: no-repeat;
     background-size: cover;
@@ -23,9 +23,9 @@ h2 {
 
 #overlay {
     position: fixed;
-    background-color: rgba(245, 223, 27, 0.5);
-    /*     background-color: rgba(109, 18, 101, 0.5); */
-    /* background-color: rgba(237, 51, 48, 0.5); */
+    /* background-color: rgba(245, 223, 27, 0.5); */
+    /* background-color: rgba(109, 18, 101, 0.5); */
+    background-color: rgba(237, 51, 48, 0.5);
     /* background-color: rgba(14, 68, 3, 0.5); */
     top: 0;
     left: 0;
