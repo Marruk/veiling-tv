@@ -1,0 +1,33 @@
+body[data-theme="giro"] {
+  --primary: rgb(253, 104, 213);
+  --on-primary: white;
+
+  /* --font: "Comic Sans MS"; */
+
+  --doei: "Questo è tutto!";
+  --kanjers: "ciclista bombastica";
+  --volgende: "Seguente";
+
+  background-image: url("../data/pizza.jpg");
+}
+
+body[data-theme="tour"] {
+  --primary: rgb(255, 222, 36);
+  --on-primary: rgb(0, 0, 0);
+
+  --doei: "C'est ça!";
+  --kanjers: "vive de velo-ers";
+  --volgende: "Suivant svp";
+
+  background-image: url("../data/tour-image.webp");
+}
+
+body[data-theme="vuelta"] {
+  --primary: red;
+
+  --doei: "Eso es!";
+  --kanjers: "amigos";
+  --volgende: "Siguiente si si";
+
+  background-image: url("../data/vuelta-image.jpg");
+}

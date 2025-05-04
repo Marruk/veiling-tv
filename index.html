@@ -1,33 +1,51 @@
 <!doctype html>
-
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-
-    <title>Veiling TV</title>
-    <meta name="description" content="Veiling TV">
-    <meta name="author" content="Pim Kerkhoven">
-
-    <link rel="stylesheet" href="css/normalize.css">
-    <link rel="stylesheet" href="css/styles.css">
-
+  <meta charset="utf-8">
+  <title>Veiling TV</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Veiling TV">
+  <meta name="author" content="Pim Kerkhoven en een beetje Mark">
+  <link rel="stylesheet" href="./css/normalize.css">
+  <link rel="stylesheet" href="./css/styles.css">
+  <link rel="stylesheet" href="./css/themes.css">
 </head>
 
-<body>
-    <div id="overlay"></div>
-    <div id="content">
-        <button id="next" onclick="playJingle()">Easter Egg (WOW FACTOR 10)</button>
-        <audio id="jingle" src="StarterA.mp3" preload="auto" style="display: none;">
-        </audio>
+<body data-theme="giro"> <!-- giro, tour, vuelta -->
+  <div class="container">
+    <div class="content">
+      <header>
         <h1>Veiling TV</h1>
-        <h2 id="rider">-</h2>
-        <button id="next" onclick="nextRider()">Volgende Renner</button>
-        <!-- <button id="next" onclick="nextRider()">Volgende Land</button> -->
-        <p id="count">-</p>
+        <small>
+          <button onclick="playJingle()">
+            Easter Egg
+            <small>(WOW FACTOR 10)</small>
+          </button>
+        </small>
+        <audio id="jingle" src="StarterA.mp3" preload="auto" style="display: none;"></audio>  
+      </header>
+      <div class="main-content">
+        <div class="card">
+          <div class="rider-container">
+            <div id="rider">
+              <small class="first">
+                Dit wordt echt spannend
+              </small>
+            </div>
+          </div>
+          <button id="rider-next" class="rider-next" onclick="next()"></button>
+        </div>
+        <div class="count-container">
+          Nog <span id="count" class="count"></span> <span class="count-label"></span> te gaan
+        </div>
+      </div>
+      <footer>
+        <button onclick="reset()">Reset de hele rambam</button>
+      </footer>
     </div>
-
-    <script src="js/main.js"></script>
+  </div>
+  <script src="./js/main.js"></script>
 </body>
 
 </html>
