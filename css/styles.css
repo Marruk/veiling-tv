@@ -127,7 +127,8 @@ h1 {
 }
 
 button {
-  background: var(--primary);
+  --_button-color: var(--primary);
+  background: var(--_button-color);
   color: var(--on-primary);
   appearance: none;
   border: 0;
@@ -139,14 +140,14 @@ button {
   font-size: 1em;
 
   border-radius: 999px;
-  box-shadow: 0px 4px 0 2px color-mix(in hsl, var(--primary), black 33%), 0px 0px 0 2px color-mix(in hsl, var(--primary), black 33%);
+  box-shadow: 0px 4px 0 2px color-mix(in hsl, var(--_button-color), black 25%), 0px 0px 0 2px color-mix(in hsl, var(--_button-color), black 25%);
 
   &:hover {
-    background: color-mix(in srgb, var(--primary), var(--on-primary) 25%);
+    --_button-color: color-mix(in srgb, var(--primary), var(--on-primary) 20%);
   }
 
   &:active {
-    background: color-mix(in srgb, var(--primary), var(--on-primary) 40%);
+    --_button-color: color-mix(in srgb, var(--primary), var(--on-primary) 30%);
   }
 }
 

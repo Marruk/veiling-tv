@@ -18,9 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 const init = () => {
   try {
-    riders = JSON.parse(localStorage.getItem(STORAGE_ITEM_KEY)) ?? STARTLIST;
+    riders = JSON.parse(localStorage.getItem(STORAGE_ITEM_KEY)) ?? randomizedRiders();
   } catch {
-    riders = STARTLIST;
+    riders = randomizedRiders();
     localStorage.setItem(STORAGE_ITEM_KEY, JSON.stringify(riders));
   }
 
@@ -79,6 +79,15 @@ const playJingle = async () => {
   } catch {
     // Geen liedje jammer
   }
+}
+
+const randomizedRiders = () => {
+  const array = STARTLIST.splice(0);
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
 }
 
 const STARTLIST = [
@@ -267,4 +276,4 @@ const STARTLIST = [
   "ZANONCELLO Enrico",
   "ZIJLAARD Maikel",
   "ZUKOWSKY Nickolas"
-].sort(_ => 0.5 - Math.random());
+];
