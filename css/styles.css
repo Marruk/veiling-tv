@@ -4,7 +4,8 @@
 body {
     /* background-image: url("../data/tour-image.webp"); */
     /* background-image: url("../data/giro-image.jpg"); */
-    background-image: url("../data/vuelta-image.jpg");
+    background-image: url("../data/pizza.jpg");
+    /* background-image: url("../data/vuelta-image.jpg"); */
     /* background-image: url("../data/ek-2016-frankrijk-poules.jpg"); */
     background-repeat: no-repeat;
     background-size: cover;
@@ -24,8 +25,8 @@ h2 {
 #overlay {
     position: fixed;
     /* background-color: rgba(245, 223, 27, 0.5); */
-    /* background-color: rgba(109, 18, 101, 0.5); */
-    background-color: rgba(237, 51, 48, 0.5);
+    background-color: rgba(109, 18, 101, 0.5);
+    /* background-color: rgba(237, 51, 48, 0.5); */
     /* background-color: rgba(14, 68, 3, 0.5); */
     top: 0;
     left: 0;
@@ -57,7 +58,7 @@ button {
     color: #fff !important;
     text-transform: uppercase;
     text-decoration: none;
-    background: rgb(237, 51, 48);
+    background: rgb(255, 117, 221);
     padding: 20px;
     border-radius: 5px;
     display: inline-block;
@@ -68,7 +69,7 @@ button {
 }
 
 button:hover {
-    background: #434343;
+    background: #f045d7;
     letter-spacing: 3px;
     -webkit-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
     -moz-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
