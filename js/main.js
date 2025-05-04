@@ -1,15 +1,23 @@
-const STORAGE_ITEM_KEY = 'riders';
+const STORAGE_ITEM_KEY = 'riders-' + document.body.getAttribute('data-theme');
 
 let riders;
 let isFresh = true;
 let isAnimating = false;
 let riderElement, countElement;
 
-document.addEventListener('DOMContentLoaded', () => {
-  if (isFresh) {
-    playJingle();
+const getStartlist = () => {
+  const theme = document.body.getAttribute('data-theme');
+  switch (theme) {
+    case 'giro': return GIRO_STARTLIST;
+    case 'sumo': return SUMO_STARTLIST;
+    case 'tour':
+    case 'vuelta':
+    default:
+      return []
   }
+};
 
+document.addEventListener('DOMContentLoaded', () => {
   riderElement = document.getElementById('rider');
   countElement = document.getElementById('count');
 
@@ -17,18 +25,21 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 const init = () => {
+  const startlist = getStartlist();
+
   try {
-    riders = JSON.parse(localStorage.getItem(STORAGE_ITEM_KEY)) ?? randomizedRiders();
+    riders = JSON.parse(localStorage.getItem(STORAGE_ITEM_KEY)) ?? randomized(startlist);
   } catch {
-    riders = randomizedRiders();
+    riders = randomized(startlist);
   }
 
   localStorage.setItem(STORAGE_ITEM_KEY, JSON.stringify(riders));
 
-  if (riders.length !== STARTLIST.length) {
+  if (riders.length !== startlist.length) {
     isFresh = false;
     show();
   } else {
+    playJingle();
     countElement.style.setProperty('--riders-left', riders.length);
   }
 }
@@ -82,8 +93,8 @@ const playJingle = async () => {
   }
 }
 
-const randomizedRiders = () => {
-  const array = STARTLIST.splice(0);
+const randomized = a => {
+  const array = a.splice(0);
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
@@ -91,7 +102,7 @@ const randomizedRiders = () => {
   return array;
 }
 
-const STARTLIST = [
+const GIRO_STARTLIST = [
   "AFFINI Edoardo",
   "ALEOTTI Giovanni",
   "ALLEGAERT Piet",
@@ -277,4 +288,49 @@ const STARTLIST = [
   "ZANONCELLO Enrico",
   "ZIJLAARD Maikel",
   "ZUKOWSKY Nickolas"
+];
+
+const SUMO_STARTLIST = [
+  "Hoshoryu",
+  "Onosato",
+  "Daieisho",
+  "Takayasu",
+  "Wakamotoharu",
+  "Abi",
+  "Tamawashi",
+  "Takerufuji",
+  "Ura",
+  "Oshoma",
+  "Hakuoho",
+  "Onokatsu",
+  "Aonishiki",
+  "Meisei",
+  "Endo",
+  "Atamifuji",
+  "Tokihayate",
+  "Kotoshoho",
+  "Ryuden",
+  "Kayo",
+  "Tamashoho",
+  "Tochitaikai",
+  "Kotozakura",
+  "Kirishima",
+  "Wakatakakage",
+  "Oho",
+  "Gonoyama",
+  "Hiradoumi",
+  "Ichiyamamoto",
+  "Chiyoshoma",
+  "Tobizaru",
+  "Churanoumi",
+  "Kinbozan",
+  "Midorifuji",
+  "Shodai",
+  "Shishi",
+  "Takanosho",
+  "Sadanoumi",
+  "Roga",
+  "Shonannoumi",
+  "Nishikigi",
+  "Asakoryu"
 ];

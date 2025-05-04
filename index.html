@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="./css/themes.css">
 </head>
 
-<body data-theme="giro"> <!-- giro, tour, vuelta -->
+<body data-theme="giro"> <!-- giro, tour, vuelta, sumo -->
   <div class="container">
     <div class="content">
       <header>
@@ -45,6 +45,14 @@
       </footer>
     </div>
   </div>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const theme = urlParams.get('theme');
+
+    if (['giro', 'tour', 'vuelta', 'sumo'].indexOf(theme) !== -1) {
+      document.body.setAttribute('data-theme', theme);
+    }
+  </script>
   <script src="./js/main.js"></script>
 </body>
 

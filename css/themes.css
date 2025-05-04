@@ -31,3 +31,14 @@ body[data-theme="vuelta"] {
 
   background-image: url("../data/vuelta-image.jpg");
 }
+
+body[data-theme="sumo"] {
+  --primary: rgb(48, 231, 191);
+  --on-primary: rgb(0, 0, 0);
+
+  --doei: "That's all she wrote";
+  --kanjers: "rikishi (力士)";
+  --volgende: "次の";
+
+  background-image: url("../data/sumo.webp");
+}
