@@ -21,8 +21,9 @@ const init = () => {
     riders = JSON.parse(localStorage.getItem(STORAGE_ITEM_KEY)) ?? randomizedRiders();
   } catch {
     riders = randomizedRiders();
-    localStorage.setItem(STORAGE_ITEM_KEY, JSON.stringify(riders));
   }
+
+  localStorage.setItem(STORAGE_ITEM_KEY, JSON.stringify(riders));
 
   if (riders.length !== STARTLIST.length) {
     isFresh = false;
