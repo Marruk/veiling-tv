@@ -140,6 +140,10 @@ h1 {
   border: 1px solid #ddd;
 }
 
+.rider-name {
+  white-space: wrap;
+}
+
 .rider-link {
   display: block;
 }
