@@ -5,38 +5,42 @@ let isFresh = true;
 let isAnimating = false;
 let riderElement, countElement;
 
-const getStartlist = () => {
+const getStartlist = async () => {
   const theme = document.body.getAttribute('data-theme');
   switch (theme) {
     case 'giro': return GIRO_STARTLIST;
     case 'sumo': return SUMO_STARTLIST;
-    case 'tour':
+    case 'tour': return await getRemoteStartlist('tour-2025');
     case 'vuelta':
     default:
       return []
   }
 };
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   riderElement = document.getElementById('rider');
   countElement = document.getElementById('count');
 
-  init();
+  await init();
 });
 
-const init = () => {
-  const startlist = getStartlist();
-
+const init = async () => {
   try {
-    riders = JSON.parse(localStorage.getItem(STORAGE_ITEM_KEY)) ?? randomized(startlist);
+    riders = JSON.parse(localStorage.getItem(STORAGE_ITEM_KEY));
+    
+    if (riders !== null) {
+      isFresh = false;
+    } else {
+      throw error;
+    }
   } catch {
+    const startlist = await getStartlist();
     riders = randomized(startlist);
+    localStorage.setItem(STORAGE_ITEM_KEY, JSON.stringify(riders));
+    isFresh = true;
   }
 
-  localStorage.setItem(STORAGE_ITEM_KEY, JSON.stringify(riders));
-
-  if (riders.length !== startlist.length) {
-    isFresh = false;
+  if (!isFresh) {
     show();
   } else {
     playJingle();
@@ -51,7 +55,17 @@ const show = () => {
   riderElement.classList.add('animate');
   riderElement.addEventListener("animationend", () => {
     if (rider !== undefined) {
-      riderElement.textContent = rider;
+      if (typeof rider === 'string' || rider instanceof String) {
+        riderElement.textContent = rider;
+      } else {
+        riderElement.innerHTML = `
+          <img class="rider-flag" src="https://raw.githubusercontent.com/lipis/flag-icons/refs/heads/main/flags/4x3/${rider.nationality.toLowerCase()}.svg" />
+          <span class="rider-name">${rider.name}</span>
+          <a target="_blank" href="https://www.procyclingstats.com/${rider.url}">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#aaa"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h560v-280h80v280q0 33-23.5 56.5T760-120H200Zm188-212-56-56 372-372H560v-80h280v280h-80v-144L388-332Z"/></svg>
+          </a>
+        `;
+      }
     } else {
       riderElement.innerHTML = '<small class="last"></small>';
     }
@@ -100,6 +114,39 @@ const randomized = a => {
     [array[i], array[j]] = [array[j], array[i]];
   }
   return array;
+}
+
+const getRemoteStartlist = async (slug) => {
+  try {
+    const response = await fetch('https://veiling-tv-zieke-backend.onrender.com/graphql_api',
+      {
+        method: 'POST',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          query: `query getStartList($slug: String!) {
+            ridersByRace(slug: $slug) {
+              id
+              name
+              nationality
+              url
+            }
+          }`,
+          variables: {
+            slug: slug
+          }
+        })
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Response status: ${response.status}`);
+    }
+
+    const json = await response.json();
+    return json.data?.ridersByRace ?? [];
+  } catch (error) {
+    console.error(error.message);
+  }
 }
 
 const GIRO_STARTLIST = [

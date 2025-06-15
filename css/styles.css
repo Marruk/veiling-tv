@@ -87,6 +87,10 @@ h1 {
   font-size: clamp(1em, 5vw, 2em);
   white-space: nowrap;
   overflow: hidden;
+  min-height: 8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   .first,
   .last {
@@ -119,6 +123,25 @@ h1 {
     opacity: 1;
     transform: translate3d(0, 0, 0);
   };
+}
+
+#rider {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.rider-flag {
+  display: block;
+  height: 1.5rem;
+  aspect-ratio: 4 / 3;
+  border-radius: .3rem;
+  border: 1px solid #ddd;
+}
+
+.rider-link {
+  display: block;
 }
 
 @keyframes halfway {
