@@ -64,6 +64,10 @@ const show = () => {
       } else {
         const maxSpecialtyPoints = Math.max(...Object.values(rider.specialtyPoints));
 
+        if (Math.random() < 0.1) {
+          rider.imageUrl = undefined;
+        }
+
         riderElement.innerHTML = `
           <div class="rider-detailed">
             <img class="rider-avatar" src="${rider.imageUrl ?? './assets/nielske.png'}" />
