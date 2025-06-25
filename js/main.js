@@ -56,14 +56,90 @@ const show = () => {
   riderElement.addEventListener("animationend", () => {
     if (rider !== undefined) {
       if (typeof rider === 'string' || rider instanceof String) {
-        riderElement.textContent = rider;
-      } else {
         riderElement.innerHTML = `
-          <img class="rider-flag" src="https://raw.githubusercontent.com/lipis/flag-icons/refs/heads/main/flags/4x3/${rider.nationality.toLowerCase()}.svg" />
-          <span class="rider-name">${rider.name}</span>
-          <a target="_blank" href="https://www.procyclingstats.com/${rider.url}">
-            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#aaa"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h560v-280h80v280q0 33-23.5 56.5T760-120H200Zm188-212-56-56 372-372H560v-80h280v280h-80v-144L388-332Z"/></svg>
-          </a>
+          <div class="rider-name">
+            ${rider}
+          </div>
+        `;
+      } else {
+        const maxSpecialtyPoints = Math.max(...Object.values(rider.specialtyPoints));
+
+        riderElement.innerHTML = `
+          <div class="rider-detailed">
+            <img class="rider-avatar" src="${rider.imageUrl ?? './assets/nielske.png'}" />
+            <div class="rider-info">
+              <div class="rider-main">
+                <div class="rider-name">${rider.name}</div>
+                <img class="rider-flag" src="https://raw.githubusercontent.com/lipis/flag-icons/refs/heads/main/flags/4x3/${rider.nationality.toLowerCase()}.svg" />
+              </div>
+              <div class="rider-subtitle">
+                <span class="rider-weight">${rider.weight} kg</span> •
+                <span class="rider-height">${rider.height * 100} cm</span> •
+                <span class="rider-birthplace">Geboren in het ${['pittoreske', 'prachtige', 'fantastische', 'mooie', 'idyllische'][Math.round(Math.random() * 4)]} ${rider.placeOfBirth}</span>
+              </div>
+              <a class="rider-link" target="_blank" href="https://www.procyclingstats.com/${rider.url}">
+                <img src="./assets/pcs-logo.png">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#aaa"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h560v-280h80v280q0 33-23.5 56.5T760-120H200Zm188-212-56-56 372-372H560v-80h280v280h-80v-144L388-332Z"/></svg>
+              </a>
+              <div class="rider-specialties">`
+          +
+          [
+            {
+              class: 'oneday',
+              property: 'oneDayRaces',
+              label: 'One day races',
+              color: '#A0D54C'
+            },
+            {
+              class: 'gc',
+              property: 'gc',
+              label: 'Gc',
+              color: '#F42A0E'
+            },
+            {
+              class: 'tt',
+              property: 'timeTrial',
+              label: 'Time trial',
+              color: '#5DA9EF'
+            },
+            {
+              class: 'sprint',
+              property: 'sprint',
+              label: 'Sprint',
+              color: '#FFAD4E'
+            },
+            {
+              class: 'climber',
+              property: 'climber',
+              label: 'Climber',
+              color: '#aa3df2'
+            },
+            {
+              class: 'hills',
+              property: 'hills',
+              label: 'Hills',
+              color: '#ff64d3'
+            }
+          ].map(specialty => {
+            const points = rider.specialtyPoints[specialty.property] ?? 0;
+            return `
+              <div class="rider-specialty rider-specialty--${specialty.class}">
+                <div class="rider-specialty-bar">
+                  <div class="rider-specialty-bar-fill" style="background-color: ${specialty.color}; width: ${Math.round((points / maxSpecialtyPoints) * 100)}%"></div>
+                </div>
+                <span class="rider-specialty-label">
+                  ${specialty.label}
+                </span>
+                <span class="rider-specialty-points">
+                  ${points}
+                </span>
+              </div>
+            `
+          }).join('')
+          +
+          `   </div>
+            </div>
+          </div>
         `;
       }
     } else {
@@ -124,11 +200,26 @@ const getRemoteStartlist = async (slug) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           query: `query getStartList($slug: String!) {
-            ridersByRace(slug: $slug) {
-              id
-              name
-              nationality
-              url
+            participationsByRace(slug: $slug) {
+              rider {
+                id
+                name
+                nationality
+                url
+                birthdate
+                height
+                weight
+                imageUrl
+                placeOfBirth
+                specialtyPoints {
+                  oneDayRaces
+                  gc
+                  timeTrial
+                  sprint
+                  climber
+                  hills
+                }
+              }
             }
           }`,
           variables: {
@@ -143,7 +234,7 @@ const getRemoteStartlist = async (slug) => {
     }
 
     const json = await response.json();
-    return json.data?.ridersByRace ?? [];
+    return (json.data?.participationsByRace ?? []).map(riderData => riderData.rider);
   } catch (error) {
     console.error(error.message);
   }
