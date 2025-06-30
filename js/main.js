@@ -67,6 +67,7 @@ const show = () => {
           const difference = new Date(Date.now() - new Date(rider.birthdate).getTime());
           return Math.abs(difference.getUTCFullYear() - 1970);
         })();
+        const isYoungRider = new Date(rider.birthdate).getUTCFullYear() >= 2000;
 
         if (Math.random() < 0.1) {
           rider.imageUrl = undefined;
@@ -83,7 +84,7 @@ const show = () => {
               <div class="rider-subtitle">
                 <span class="rider-weight">${rider.weight ?? '?'} kg</span> •
                 <span class="rider-height">${rider.height ?? '?'} m</span> •
-                <span class="rider-age">${isNaN(age) ? '?' : age} jr</span> •
+                <span class="rider-age">${isNaN(age) ? '?' : age} jr</span>${isYoungRider ? '<img class="rider-young" src="./assets/white.svg">' : ''} •
                 <span class="rider-birthplace">Geboren in het ${['pittoreske', 'prachtige', 'fantastische', 'mooie', 'idyllische'][Math.round(Math.random() * 4)]} ${rider.placeOfBirth ?? 'Weeknie'}</span>
               </div>
               <a class="rider-link" target="_blank" href="https://www.procyclingstats.com/${rider.url}">

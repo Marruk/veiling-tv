@@ -180,6 +180,13 @@ h1 {
   }
 }
 
+.rider-young {
+  display: inline-block;
+  height: 1em;
+  margin-inline-start: .25rem;
+  vertical-align: -.1rem;
+}
+
 .rider-specialties {
   display: grid;
   gap: .5rem 1rem;
