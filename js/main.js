@@ -193,6 +193,14 @@ const playJingle = async () => {
   }
 }
 
+const openBackup = () => {
+  const params = new URLSearchParams(window.location.search);
+  params.set('backup', 'jalekker');
+  localStorage.clear(STORAGE_ITEM_KEY);
+  window.location.search = params.toString();
+  setTimeout(() => { window.location.reload(); }, 100);
+}
+
 const randomized = a => {
   const array = [...a];
   for (let i = array.length - 1; i > 0; i--) {
