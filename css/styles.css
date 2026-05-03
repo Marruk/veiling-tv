@@ -81,7 +81,7 @@ h1 {
 }
 
 .rider-container {
-  padding: 4rem 1rem;
+  padding: 2rem;
   overflow: hidden;
   min-height: 8rem;
   display: flex;
@@ -137,7 +137,7 @@ h1 {
   border: 1px solid #ddd;
 }
 
-.rider-detailed {
+.rider-stuff {
   text-align: left;
   display: flex;
   gap: 1rem;
@@ -145,7 +145,7 @@ h1 {
 }
 
 .rider-avatar {
-  width: 120px;
+  width: 160px;
   border-radius: 1rem;
   display: block;
   max-width: 15vw;
@@ -167,6 +167,10 @@ h1 {
 .rider-subtitle {
   opacity: .8;
   font-size: .8em;
+}
+
+.rider-team {
+  font-size: 1.25em;
 }
 
 .rider-link {
@@ -192,6 +196,13 @@ h1 {
   gap: .5rem 1rem;
   grid-template-columns: 1fr 1fr;
   margin-block-start: 1rem;
+}
+
+.rider-separator {
+  height: 1px;
+  border: 0;
+  background: #ccc;
+  margin: 2em 0;
 }
 
 .rider-specialty {
@@ -230,6 +241,21 @@ h1 {
   .rider-specialty--oneday & {
     background-color: #A0D54C;
   }
+}
+
+.rider-fact-title {
+  font-size: .8em;
+  margin-bottom: 1em;
+}
+
+.rider-fact-title strong,
+.rider-fact-title small {
+  line-height: 1.5;
+  display: block;
+}
+
+.rider-fact-title small {
+  opacity: .6em;
 }
 
 .notice {

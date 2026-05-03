@@ -8,7 +8,7 @@ let riderElement, countElement;
 const getStartlist = async () => {
   const theme = document.body.getAttribute('data-theme');
   switch (theme) {
-    case 'giro': return GIRO_STARTLIST;
+    case 'giro': return new URLSearchParams(window.location.search).get('backup') === 'jalekker' ? GIRO_STARTLIST : await getRemoteStartlist('giro-d-italia-2026');
     case 'sumo': return SUMO_STARTLIST;
     case 'tour': return new URLSearchParams(window.location.search).get('backup') === 'jalekker' ? TOUR_STARTLIST : await getRemoteStartlist('tour-2025');
     case 'vuelta': return new URLSearchParams(window.location.search).get('backup') === 'jalekker' ? VUELTA_STARTLIST : await getRemoteStartlist('vuelta-2025');
@@ -50,6 +50,7 @@ const init = async () => {
 
 const show = () => {
   const rider = riders[0];
+  console.error(rider);
 
   isAnimating = true;
   riderElement.classList.add('animate');
@@ -62,12 +63,12 @@ const show = () => {
           </div>
         `;
       } else {
-        const maxSpecialtyPoints = Math.max(...Object.values(rider.specialtyPoints));
+        const maxSpecialtyPoints = Math.max(...Object.values(rider.specialtyScores));
         const age = (_ => { 
-          const difference = new Date(Date.now() - new Date(rider.birthdate).getTime());
+          const difference = new Date(Date.now() - new Date(rider.dateOfBirth).getTime());
           return Math.abs(difference.getUTCFullYear() - 1970);
         })();
-        const isYoungRider = new Date(rider.birthdate).getUTCFullYear() >= 2000;
+        const isYoungRider = new Date(rider.dateOfBirth).getUTCFullYear() >= 2001;
 
         if (Math.random() < 0.1) {
           rider.imageUrl = undefined;
@@ -75,80 +76,110 @@ const show = () => {
 
         riderElement.innerHTML = `
           <div class="rider-detailed">
-            <img class="rider-avatar" src="${rider.imageUrl ?? './assets/nielske.png'}" />
-            <div class="rider-info">
-              <div class="rider-main">
-                <div class="rider-name">${rider.name}</div>
-                <img class="rider-flag" src="https://raw.githubusercontent.com/lipis/flag-icons/refs/heads/main/flags/4x3/${rider.nationality.toLowerCase()}.svg" />
-              </div>
-              <div class="rider-subtitle">
-                <span class="rider-weight">${rider.weight ?? '?'} kg</span> •
-                <span class="rider-height">${rider.height ?? '?'} m</span> •
-                <span class="rider-age">${isNaN(age) ? '?' : age} jr</span>${isYoungRider ? '<img class="rider-young" src="./assets/white.svg">' : ''} •
-                <span class="rider-birthplace">Geboren in het ${['pittoreske', 'prachtige', 'fantastische', 'mooie', 'idyllische'][Math.round(Math.random() * 4)]} ${rider.placeOfBirth ?? 'Weeknie'}</span>
-              </div>
-              <a class="rider-link" target="_blank" href="https://www.procyclingstats.com/${rider.url}">
-                <img src="./assets/pcs-logo.png">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#aaa"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h560v-280h80v280q0 33-23.5 56.5T760-120H200Zm188-212-56-56 372-372H560v-80h280v280h-80v-144L388-332Z"/></svg>
-              </a>
-              <div class="rider-specialties">`
-          +
-          [
-            {
-              class: 'oneday',
-              property: 'oneDayRaces',
-              label: 'One day races',
-              color: '#A0D54C'
-            },
-            {
-              class: 'gc',
-              property: 'gc',
-              label: 'Gc',
-              color: '#F42A0E'
-            },
-            {
-              class: 'tt',
-              property: 'timeTrial',
-              label: 'Time trial',
-              color: '#5DA9EF'
-            },
-            {
-              class: 'sprint',
-              property: 'sprint',
-              label: 'Sprint',
-              color: '#FFAD4E'
-            },
-            {
-              class: 'climber',
-              property: 'climber',
-              label: 'Climber',
-              color: '#aa3df2'
-            },
-            {
-              class: 'hills',
-              property: 'hills',
-              label: 'Hills',
-              color: '#ff64d3'
-            }
-          ].map(specialty => {
-            const points = rider.specialtyPoints[specialty.property] ?? 0;
-            return `
-              <div class="rider-specialty rider-specialty--${specialty.class}">
-                <div class="rider-specialty-bar">
-                  <div class="rider-specialty-bar-fill" style="background-color: ${specialty.color}; width: ${Math.round((points / maxSpecialtyPoints) * 100)}%"></div>
+            <div class="rider-stuff">
+              <img class="rider-avatar" src="${rider.pcsImgUrl ?? './assets/nielske.png'}" />
+              <div class="rider-info">
+                <div class="rider-main">
+                  <div class="rider-name">${rider.fullName}</div>
+                  <img class="rider-flag" src="https://raw.githubusercontent.com/lipis/flag-icons/refs/heads/main/flags/4x3/${rider.nationality.toLowerCase()}.svg" />
                 </div>
-                <span class="rider-specialty-label">
-                  ${specialty.label}
-                </span>
-                <span class="rider-specialty-points">
-                  ${points}
-                </span>
+                <div class="rider-subtitle">
+                  <span class="rider-team">
+                    ${rider.teamName}
+                  </span>
+                </div>
+                <div class="rider-subtitle">
+                  <span class="rider-weight">${rider.weightKg ?? '?'} kg</span> •
+                  <span class="rider-height">${rider.heightCm ?? '?'} cm</span> •
+                  <span class="rider-age">${isNaN(age) ? '?' : age} jr</span>${isYoungRider ? '<img class="rider-young" src="./assets/white.svg">' : ''}
+                </div>
+                <div class="rider-subtitle">
+                  <span class="rider-birthplace">Geboren in het ${['pittoreske', 'prachtige', 'fantastische', 'mooie', 'idyllische'][Math.round(Math.random() * 4)]} ${rider.birthPlace ?? 'Weeknie'}</span>
+                </div>
+                <a class="rider-link" target="_blank" href="${rider.riderUrlPcs}">
+                  <img src="./assets/pcs-logo.png">
+                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#aaa"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h560v-280h80v280q0 33-23.5 56.5T760-120H200Zm188-212-56-56 372-372H560v-80h280v280h-80v-144L388-332Z"/></svg>
+                </a>
+                <div class="rider-specialties">`
+            +
+            [
+              {
+                class: 'oneday',
+                property: 'oneDayRaces',
+                label: 'One day races',
+                color: '#A0D54C'
+              },
+              {
+                class: 'gc',
+                property: 'gc',
+                label: 'Gc',
+                color: '#F42A0E'
+              },
+              {
+                class: 'tt',
+                property: 'timeTrial',
+                label: 'Time trial',
+                color: '#5DA9EF'
+              },
+              {
+                class: 'sprint',
+                property: 'sprint',
+                label: 'Sprint',
+                color: '#FFAD4E'
+              },
+              {
+                class: 'climber',
+                property: 'climber',
+                label: 'Climber',
+                color: '#aa3df2'
+              },
+              {
+                class: 'hills',
+                property: 'hills',
+                label: 'Hills',
+                color: '#ff64d3'
+              }
+            ].map(specialty => {
+              const points = rider.specialtyScores[specialty.property] ?? 0;
+              return `
+                <div class="rider-specialty rider-specialty--${specialty.class}">
+                  <div class="rider-specialty-bar">
+                    <div class="rider-specialty-bar-fill" style="background-color: ${specialty.color}; width: ${Math.round((points / maxSpecialtyPoints) * 100)}%"></div>
+                  </div>
+                  <span class="rider-specialty-label">
+                    ${specialty.label}
+                  </span>
+                  <span class="rider-specialty-points">
+                    ${points}
+                  </span>
+                </div>
+              `
+            }).join('')
+            +
+            `   </div>
               </div>
-            `
-          }).join('')
-          +
-          `   </div>
             </div>
+            `
+            +
+            `
+            ${rider.feitje !== undefined ?
+              `
+                <hr class="rider-separator" />
+                <div class="rider-fact">
+                  <div class="rider-fact-title">
+                    <strong>Leuk weetje</strong>
+                    <small>
+                      (misschien klopt het niet want Niels heeft AI gebruikt om nog wat extra bomen te verbranden)
+                    </small>
+                  </div>
+                  ${rider.feitje.text}
+                </div>
+              `
+              : ''
+            }
+            `
+            +
+            `
           </div>
         `;
       }
@@ -212,30 +243,39 @@ const randomized = a => {
 
 const getRemoteStartlist = async (slug) => {
   try {
-    const response = await fetch('https://veiling-tv-zieke-backend.onrender.com/graphql_api',
+    const response = await fetch('https://vettewielrenbackend.koenen-bolt.nl/graphql',
       {
         method: 'POST',
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           query: `query getStartList($slug: String!) {
-            participationsByRace(slug: $slug) {
-              rider {
-                id
-                name
-                nationality
-                url
-                birthdate
-                height
-                weight
-                imageUrl
-                placeOfBirth
-                specialtyPoints {
-                  oneDayRaces
-                  gc
-                  timeTrial
-                  sprint
-                  climber
-                  hills
+            meerdaagseKoers(slug: $slug) {
+              startList {
+                rider {
+                  birthPlace
+                  dateOfBirth
+                  feitje {
+                    source
+                    text
+                  }
+                  fullName
+                  heightCm
+                  nationality
+                  pcsImgUrl
+                  riderType
+                  riderUrlPcs
+                  slug
+                  specialtyScores {
+                    climber
+                    gc
+                    hills
+                    oneDay
+                    sprint
+                    tt
+                  }
+                  teamName
+                  teamPcsUrl
+                  weightKg
                 }
               }
             }
@@ -252,7 +292,7 @@ const getRemoteStartlist = async (slug) => {
     }
 
     const json = await response.json();
-    return (json.data?.participationsByRace ?? []).map(riderData => riderData.rider);
+    return (json.data?.meerdaagseKoers?.startList ?? []).map(riderData => riderData.rider);
   } catch (error) {
     console.error(error.message);
   }
@@ -823,45 +863,45 @@ const VUELTA_STARTLIST = [
 
 const SUMO_STARTLIST = [
   "Hoshoryu",
-  "Onosato",
   "Kotozakura",
-  "Daieisho",
   "Kirishima",
-  "Wakatakakage",
-  "Oshoma",
-  "Takayasu",
-  "Aonishiki",
-  "Wakamotoharu",
   "Oho",
-  "Abi",
-  "Onokatsu",
-  "Kinbozan",
-  "Hakuoho",
-  "Tamawashi",
-  "Hiradoumi",
-  "Meisei",
-  "Takerufuji",
-  "Gonoyama",
-  "Tobizaru",
-  "Endo",
-  "Sadanoumi",
   "Ichiyamamoto",
   "Ura",
-  "Chiyoshoma",
-  "Atamifuji",
-  "Roga",
   "Takanosho",
-  "Tokihayate",
-  "Midorifuji",
-  "Asakoryu",
-  "Churanoumi",
+  "Daieisho",
+  "Tamawashi",
+  "Hiradoumi",
+  "Oshoma",
   "Shodai",
-  "Kusano",
+  "Gonoyama",
+  "Tokihayate",
+  "Chiyoshoma",
+  "Midorifuji",
+  "Tobizaru",
+  "Shishi",
+  "Ryuden",
+  "Asanoyama",
+  "Asahakuryu",
+  "Onosato",
+  "Aonishiki",
+  "Takayasu",
+  "Wakamotoharu",
+  "Yoshinofuji",
+  "Wakatakakage",
+  "Hakunofuji",
+  "Atamifuji",
+  "Churanoumi",
+  "Onokatsu",
   "Fujinokawa",
+  "Kinbozan",
+  "Roga",
   "Kotoshoho",
-  "Hidenoumi",
-  "Kayo",
+  "Nishikifuji",
+  "Abi",
+  "Tomokaze",
   "Mitakeumi",
-  "Kotoeiho",
-  "Shishi"
+  "Asakoryu",
+  "Oshoumi",
+  "Hatsuyama"
 ];
