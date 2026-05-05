@@ -243,6 +243,53 @@ h1 {
   }
 }
 
+.rider-badges {
+  display: flex;
+  gap: .4em;
+  margin-block-start: .5em;
+}
+
+.rider-badge {
+  font-size: .6em;
+  font-weight: bold;
+  padding: .15em .4em;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  line-height: 1.4;
+}
+
+.rider-badge--gc {
+  background: #F42A0E;
+  color: #fff;
+}
+
+.rider-badge--sprint {
+  background: #FFAD4E;
+  color: #000;
+}
+
+.rider-badge--inactive {
+  background: transparent;
+  color: currentColor;
+  opacity: .3;
+  outline: 1px solid currentColor;
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+}
+
+.rider-fact-extra {
+  margin-top: 1em;
+}
+
+.rider-quote {
+  margin: 1em 0 0;
+  padding-inline-start: 1em;
+  border-inline-start: 3px solid #ccc;
+  font-style: italic;
+  opacity: .8;
+}
+
 .rider-fact-title {
   font-size: .8em;
   margin-bottom: 1em;

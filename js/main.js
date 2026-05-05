@@ -96,6 +96,10 @@ const show = () => {
                 <div class="rider-subtitle">
                   <span class="rider-birthplace">Geboren in het ${['pittoreske', 'prachtige', 'fantastische', 'mooie', 'idyllische'][Math.round(Math.random() * 4)]} ${rider.birthPlace ?? 'Weeknie'}</span>
                 </div>
+                <div class="rider-badges">
+                  <span class="rider-badge rider-badge--gc ${rider.gcKopman ? '' : 'rider-badge--inactive'}">GC Kopman</span>
+                  <span class="rider-badge rider-badge--sprint ${rider.sprintKopman ? '' : 'rider-badge--inactive'}">Sprint Kopman</span>
+                </div>
                 <a class="rider-link" target="_blank" href="${rider.riderUrlPcs}">
                   <img src="./assets/pcs-logo.png">
                   <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#aaa"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h560v-280h80v280q0 33-23.5 56.5T760-120H200Zm188-212-56-56 372-372H560v-80h280v280h-80v-144L388-332Z"/></svg>
@@ -167,13 +171,26 @@ const show = () => {
                 <hr class="rider-separator" />
                 <div class="rider-fact">
                   <div class="rider-fact-title">
-                    <strong>Leuk weetje</strong>
+                    <strong>Leuke weetjes</strong>
                     <small>
                       (misschien klopt het niet want Niels heeft AI gebruikt om nog wat extra bomen te verbranden)
                     </small>
                   </div>
                   ${rider.feitje.text}
+                  ${rider.feitje.feitje2 ? `<div class="rider-fact-extra">${rider.feitje.feitje2}</div>` : ''}
                 </div>
+                ${rider.feitje.quote ? `
+                  <hr class="rider-separator" />
+                  <div class="rider-fact">
+                    <div class="rider-fact-title">
+                      <strong>Leuke quote</strong>
+                    <small>
+                      (waarschijnlijk gehallucineerd)
+                    </small>
+                    </div>
+                    <blockquote class="rider-quote">${rider.feitje.quote}</blockquote>
+                  </div>
+                ` : ''}
               `
               : ''
             }
@@ -257,12 +274,16 @@ const getRemoteStartlist = async (slug) => {
                   feitje {
                     source
                     text
+                    quote
+                    feitje2
                   }
                   fullName
                   heightCm
                   nationality
                   pcsImgUrl
                   riderType
+                  gcKopman
+                  sprintKopman
                   riderUrlPcs
                   slug
                   specialtyScores {
