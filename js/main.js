@@ -108,7 +108,7 @@ const show = () => {
             [
               {
                 class: 'oneday',
-                property: 'oneDayRaces',
+                property: 'oneDay',
                 label: 'One day races',
                 color: '#A0D54C'
               },
@@ -120,7 +120,7 @@ const show = () => {
               },
               {
                 class: 'tt',
-                property: 'timeTrial',
+                property: 'tt',
                 label: 'Time trial',
                 color: '#5DA9EF'
               },
@@ -213,6 +213,9 @@ const show = () => {
 }
 
 const reset = () => {
+  if (!confirm('Weet je het zeker?')) {
+    return;
+  }
   localStorage.clear(STORAGE_ITEM_KEY);
   window.location.reload();
 }
