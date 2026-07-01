@@ -165,7 +165,7 @@ const show = () => {
             `
             +
             `
-            ${rider.feitje !== undefined ?
+            ${rider.feitje !== undefined && rider.feitje !== null ?
               `
                 <hr class="rider-separator" />
                 <div class="rider-fact">
@@ -175,6 +175,8 @@ const show = () => {
                       (misschien klopt het niet want Niels heeft AI gebruikt om nog wat extra bomen te verbranden)
                     </small>
                   </div>
+                  ${rider.feitje.text}
+                  ${rider.feitje.feitje2 ? `<div class="rider-fact-extra">${rider.feitje.feitje2}</div>` : ''}
                 </div>
                 ${rider.feitje.quote ? `
                   <hr class="rider-separator" />
