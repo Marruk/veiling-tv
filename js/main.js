@@ -175,8 +175,6 @@ const show = () => {
                       (misschien klopt het niet want Niels heeft AI gebruikt om nog wat extra bomen te verbranden)
                     </small>
                   </div>
-                  ${rider.feitje.text}
-                  ${rider.feitje.feitje2 ? `<div class="rider-fact-extra">${rider.feitje.feitje2}</div>` : ''}
                 </div>
                 ${rider.feitje.quote ? `
                   <hr class="rider-separator" />
