@@ -10,7 +10,7 @@ const getStartlist = async () => {
   switch (theme) {
     case 'giro': return new URLSearchParams(window.location.search).get('backup') === 'jalekker' ? GIRO_STARTLIST : await getRemoteStartlist('giro-d-italia-2026');
     case 'sumo': return SUMO_STARTLIST;
-    case 'tour': return new URLSearchParams(window.location.search).get('backup') === 'jalekker' ? TOUR_STARTLIST : await getRemoteStartlist('tour-2025');
+    case 'tour': return new URLSearchParams(window.location.search).get('backup') === 'jalekker' ? TOUR_STARTLIST : await getRemoteStartlist('tour-de-france-2026');
     case 'vuelta': return new URLSearchParams(window.location.search).get('backup') === 'jalekker' ? VUELTA_STARTLIST : await getRemoteStartlist('vuelta-2025');
     default:
       return []
@@ -50,7 +50,6 @@ const init = async () => {
 
 const show = () => {
   const rider = riders[0];
-  console.error(rider);
 
   isAnimating = true;
   riderElement.classList.add('animate');
